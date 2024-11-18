@@ -2,21 +2,22 @@ import os
 import requests
 from dotenv import load_dotenv
 
+from constant import BASE_URL, COMMENT_THREAD_ENDPOINT, ID, COMMENT_MAX_RESULTS_COUNT, SNIPPET
+
 # Load environment variables
 load_dotenv()
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-BASE_URL = os.getenv("BASE_URL")
 
 def get_comments_data(video_id):
     """
     Fetch the latest 100 comments for a given video ID.
     """
-    url = f"{BASE_URL}/commentThreads"
+    url = f"{BASE_URL}/{COMMENT_THREAD_ENDPOINT}"
     params = {
-        "part": "snippet",
+        "part": SNIPPET,
         "videoId": video_id,
-        "maxResults": 100,
+        "maxResults": COMMENT_MAX_RESULTS_COUNT,
         "key": YOUTUBE_API_KEY
     }
     response = requests.get(url, params=params)
@@ -26,11 +27,11 @@ def get_comments_data(video_id):
         if response.status_code == 200:
             data = response.json()
             for item in data["items"]:
-                comment_id = item["id"]
-                comment_text = item["snippet"]["topLevelComment"]["snippet"]["textDisplay"]
-                author_name = item["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"]
-                published_date = item["snippet"]["topLevelComment"]["snippet"]["publishedAt"]
-                like_count = item["snippet"]["topLevelComment"]["snippet"]["likeCount"]
+                comment_id = item[ID]
+                comment_text = item[SNIPPET]["topLevelComment"][SNIPPET]["textDisplay"]
+                author_name = item[SNIPPET]["topLevelComment"][SNIPPET]["authorDisplayName"]
+                published_date = item[SNIPPET]["topLevelComment"][SNIPPET]["publishedAt"]
+                like_count = item[SNIPPET]["topLevelComment"][SNIPPET]["likeCount"]
                 comments.append({
                     "Comment ID": comment_id,
                     "Comment Text": comment_text,
@@ -41,11 +42,11 @@ def get_comments_data(video_id):
                 # Check for replies
                 if "replies" in item:
                     for reply in item["replies"]["comments"]:
-                        reply_id = reply["id"]
-                        reply_text = reply["snippet"]["textDisplay"]
-                        reply_author = reply["snippet"]["authorDisplayName"]
-                        reply_published = reply["snippet"]["publishedAt"]
-                        reply_like_count = reply["snippet"]["likeCount"]
+                        reply_id = reply[ID]
+                        reply_text = reply[SNIPPET]["textDisplay"]
+                        reply_author = reply[SNIPPET]["authorDisplayName"]
+                        reply_published = reply[SNIPPET]["publishedAt"]
+                        reply_like_count = reply[SNIPPET]["likeCount"]
                         comments.append({
                             "Comment ID": reply_id,
                             "Comment Text": reply_text,

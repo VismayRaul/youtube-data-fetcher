@@ -1,20 +1,15 @@
 import os
 import pandas as pd
 from datetime import datetime
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-BASE_URL = os.getenv("BASE_URL")
+from constant import DOWNLOAD_FOLDER
 
 def export_to_excel(video_data, comments_data):
     """
     Export video and comment data to a dynamically named Excel file in the Downloads folder.
     """
     # Determine the Downloads directory
-    downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
+    downloads_folder = os.path.join(os.path.expanduser("~"), DOWNLOAD_FOLDER)
 
     # Create a dynamic file name with timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

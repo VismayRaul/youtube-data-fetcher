@@ -1,16 +1,7 @@
-import os
-from dotenv import load_dotenv
-
 from helper_functions.channels import get_channel_id
 from helper_functions.videos import get_all_videos, get_video_details
 from helper_functions.comments import get_comments_data
 from helper_functions.excel_export import export_to_excel
-
-# Load environment variables
-load_dotenv()
-
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-BASE_URL = os.getenv("BASE_URL")
 
 def main(channel_handle):
     """

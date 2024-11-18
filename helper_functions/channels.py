@@ -2,11 +2,12 @@ import os
 import requests
 from dotenv import load_dotenv
 
+from constant import BASE_URL, SEARCH_ENDPOINT, SNIPPET, CHANNEL
+
 # Load environment variables
 load_dotenv()
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-BASE_URL = os.getenv("BASE_URL")
 
 def get_channel_id(channel_handle):
     """
@@ -15,11 +16,11 @@ def get_channel_id(channel_handle):
     # Strip "@" from the handle if present
     clean_handle = channel_handle.lstrip("@")
 
-    url = f"{BASE_URL}/search"
+    url = f"{BASE_URL}/{SEARCH_ENDPOINT}"
     params = {
-        "part": "snippet",
+        "part": SNIPPET,
         "q": clean_handle,  # Use the handle as a search query
-        "type": "channel",
+        "type": CHANNEL,
         "key": YOUTUBE_API_KEY,
     }
 
@@ -31,7 +32,7 @@ def get_channel_id(channel_handle):
             data = response.json()
 
             if "items" in data and data["items"]:
-                channel_id = data["items"][0]["snippet"]["channelId"]
+                channel_id = data["items"][0][SNIPPET]["channelId"]
                 return channel_id
             else:
                 print(f"No channel found for handle: {channel_handle}")
